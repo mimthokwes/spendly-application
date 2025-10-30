@@ -1,17 +1,45 @@
 import mongoose from "mongoose";
 
-const savingSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  balance: { type: Number, default: 0 },
-  history: [
-    {
-      amount: { type: Number, required: true },
-      source: { type: String, default: "Manual Top-Up" },
-      transactionId: { type: mongoose.Schema.Types.ObjectId, ref: "Transaction", default: null },
-      date: { type: Date, default: Date.now },
+const savingHistorySchema = new mongoose.Schema({
+  typeSaving: {
+    type: String,
+    enum: ["deposit", "withdraw"],
+    required: true,
+  },
+  nominal: {
+    type: Number,
+    required: true,
+  },
+  category: {
+    type: String,
+    default: "",
+  },
+  description: {
+    type: String,
+    default: "",
+  },
+  date: {
+    type: Date,
+    default: () =>
+      new Date().toLocaleString("en-US", { timeZone: "Asia/Jakarta" }),
+  },
+});
+
+const savingSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
-  ],
-}, { timestamps: true });
+    total: {
+      type: Number,
+      default: 0,
+    },
+    history: [savingHistorySchema],
+  },
+  { timestamps: true }
+);
 
 const Saving = mongoose.model("Saving", savingSchema);
 export default Saving;
