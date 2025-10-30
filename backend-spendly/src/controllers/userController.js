@@ -134,7 +134,7 @@ export const getUserProfile = async (req, res) => {
 // LOGOUT USER API
 export const logoutUser = async (req, res) => {
   try {
-    res.status(200).json({ data: "User delete successfuly" });
+    res.status(200).json({ data: "User logout successfuly" });
   }catch (error) {
     res.status(500).json({ errors: "Sory Looks Like Something Went Wrong" });
     console.log(error);
