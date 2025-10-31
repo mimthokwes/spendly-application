@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "SPENDLY",
-    "slug": "SPENDLY",
+    "name": "spendly",
+    "slug": "frontend-spendly",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "spendly",
+    "scheme": "frontendspendly",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -43,6 +43,7 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+        "entryPoint": "./node_modules/expo-router/entry"
   }
 }
