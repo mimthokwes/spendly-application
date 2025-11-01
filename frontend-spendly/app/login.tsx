@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
+import {useRouter} from "expo-router";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import { View,StyleSheet } from "react-native";
+import { View,StyleSheet,Alert } from "react-native";
 import Profile from "@/components/loginComponents/profile";
 import InputNumber from "@/components/loginComponents/inputNumber";
 import PasswordNumber from "@/components/loginComponents/passwordNumber";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {COLOR} from '../constants/colors'
 
 
@@ -21,12 +23,55 @@ const styles = StyleSheet.create({
 
 
 export default function LoginScreen() {
+    const router = useRouter();
+    const [username, setUsername] = useState(null);
+    const [email, setEmail] = useState(null);
     const [password, setPassword] = useState("");
 
-      const handlePress = (value) => {
+    useEffect (()=> {
+	    const getUserInfo = async () => {
+		    try{
+			    const storedUsername = await AsyncStorage.getItem("username");
+			    const storedEmail = await AsyncStorage.getItem("email");
+			    if (storedUsername && storedEmail) {
+				    setUsername(storedUsername);
+				    setEmail(storedEmail);
+			    } else {
+			    router.replace("/register");
+			    }
+		    } catch (error) {
+			    console.error("Error retrieving user info:", error);
+		    }
+	    };
+	    getUserInfo();
+    }, [] );
+
+      const handlePress = async (value) => {
 	 if (value === "ENTER") {
 	   console.log("Entered password:", password);
-				      // Tambahkan aksi validasi di sini
+	   try {
+		   const res = await fetch("http://192.168.110.184:3001/api/users/login",{
+			   method: "POST",
+			   headers: {
+				   "Content-Type": "application/json",
+			   },
+			   body: JSON.stringify({
+				   email,
+				   password
+			   })
+		   })
+		   const data = await res.json();
+		   if (res.ok) {
+			   Alert.alert("Success Login Walcome", data.message);
+			   router.replace("/dashboard");
+		   } else {
+			   Alert.alert("Error", data.message);
+		   }
+	   } catch (error) {
+		   console.error("Error logging in:", error);
+		   Alert.alert("Error", "Failed to connect the server");
+	   }
+
 	} else if (value === "DELETE") {
            setPassword(password.slice(0, -1)); // hapus 1 karakter terakhir
         } else {
@@ -40,7 +85,7 @@ export default function LoginScreen() {
         <ThemedView style={styles.container}>
             <Profile 
 	    imageSource={require("../assets/images/favicon.png")}
-	    username="Walcome Mr. Dahlan" 
+	    username={username} 
 	    />
 	    <InputNumber value={password} />
 	    <PasswordNumber onPress={handlePress} />

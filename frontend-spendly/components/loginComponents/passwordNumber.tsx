@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   enterButton: {
-    backgroundColor: COLOR.primary,
+    backgroundColor: COLOR.green,
     width: 100,
     borderRadius: 30,
   },
