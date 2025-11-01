@@ -56,14 +56,16 @@ export default function LoginScreen() {
 				   "Content-Type": "application/json",
 			   },
 			   body: JSON.stringify({
-				   email,
-				   password
+                        	  data: {
+                                     email,
+                                     password
+                                  }
 			   })
 		   })
 		   const data = await res.json();
 		   if (res.ok) {
 			   Alert.alert("Success Login Walcome", data.message);
-			   router.replace("/dashboard");
+			   router.replace("(tabs)/index");
 		   } else {
 			   Alert.alert("Error", data.message);
 		   }
