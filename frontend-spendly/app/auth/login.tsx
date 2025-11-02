@@ -33,7 +33,7 @@ export default function LoginScreen() {
           setUsername(storedUsername);
           setEmail(storedEmail);
         } else {
-          router.replace("/auth/register");
+          router.push("/auth/register");
         }
       } catch (error) {
         console.error("Error retrieving user info:", error);

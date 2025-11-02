@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "spendly-new",
-    "slug": "spendly-new",
+    "name": "spendly",
+    "slug": "spendly",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",

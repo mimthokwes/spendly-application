@@ -19,7 +19,7 @@ export default function InputNumber({ value = ""}: InputNumberProps) {
 const styles = StyleSheet.create({
   container: {
     height: 50,
-    width: "80%",
+    width: "95%",
     backgroundColor: COLOR.white,
     borderRadius: 15,
     justifyContent: "center",

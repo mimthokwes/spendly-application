@@ -3,23 +3,22 @@ import {
   View,
   Text,
   TextInput,
-  Button,
+  TouchableOpacity,
   StyleSheet,
   Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { COLOR } from "../../constants/colors";
-import InputNumber from "@/components/loginComponents/inputNumber";
+import InputNumber from "@/components/registerComponents/inputNumber";
 import PasswordNumber from "@/components/loginComponents/passwordNumber";
 
 export default function RegisterScreen() {
   const router = useRouter();
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState(null);
+  const [email, setEmail] = useState(null);
   const [password, setPassword] = useState("");
   const [showNumeric, setShowNumeric] = useState(false);
-
 
   const handleRegister = async () => {
     if (!username || !email || !password) {
@@ -42,13 +41,12 @@ export default function RegisterScreen() {
         await AsyncStorage.setItem("username", username);
         await AsyncStorage.setItem("email", email);
         Alert.alert("Success", data.message || "Registration successful!");
-        router.replace("/auth/login");
+        router.push("/auth/login");
       } else {
         Alert.alert("Error", data.message || "Failed to register");
       }
     } catch (error) {
-      console.error("Error registering:", error);
-      Alert.alert("Error", "Failed to connect to server");
+      Alert.alert("Error", "Failed to connect the server");
     }
   };
 
@@ -64,10 +62,10 @@ export default function RegisterScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.createAccount}>Create Account</Text>
-      {/* Wrapper untuk input teks */}
+
       {!showNumeric && (
         <View style={styles.formWrapper}>
+          <Text style={styles.createAccount}>Create Account</Text>
           <TextInput
             style={styles.input}
             placeholder="Username"
@@ -84,18 +82,26 @@ export default function RegisterScreen() {
             keyboardType="email-address"
           />
 
-          <Button title="Set Password" onPress={() => setShowNumeric(true)} />
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => setShowNumeric(true)}
+          >
+            <Text style={styles.buttonText}>Set Password</Text>
+          </TouchableOpacity>
         </View>
       )}
 
-      {/* Wrapper untuk numeric keypad */}
       {showNumeric && (
-        <View style={styles.formWrapper}>
+        <View style={styles.formWrapperPassword}>
+          <Text style={styles.createPassword}>Set Your Password</Text>
           <InputNumber value={password} />
-          <PasswordNumber onPress={handleNumberPress} />
-          <View style={{ marginTop: 12, width: "100%" }}>
-            <Button title="Back" onPress={() => setShowNumeric(false)} />
-          </View>
+          <PasswordNumber onPress={handleNumberPress}/>
+          <TouchableOpacity
+            style={[styles.buttonBack, { marginTop: 12, }]}
+            onPress={() => setShowNumeric(false)}
+          >
+            <Text style={styles.buttonText}>Back</Text>
+          </TouchableOpacity>
         </View>
       )}
     </View>
@@ -112,11 +118,26 @@ const styles = StyleSheet.create({
   },
   createAccount: {
     fontWeight: "bold",
+    marginTop:20,
     marginBottom: 50,
+    color: "#fff",
+    fontSize: 34,
+  },
+  createPassword: {
+    fontWeight: "bold",
+    marginTop:20,
+    marginBottom: 50,
+    color: "#fff",
+    fontSize: 28,
   },
   formWrapper: {
     width: "100%",
     alignItems: "center",
+  },
+    formWrapperPassword: {
+    width: "100%",
+    alignItems: "center",
+    marginTop: 50,
   },
   input: {
     width: "100%",
@@ -127,5 +148,32 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     paddingHorizontal: 15,
     fontSize: 16,
+  },
+  PasswordNumber: {
+    position: "absolute",
+    bottom: 0,
+  },
+  button: {
+    backgroundColor: "#4e9bde",
+    paddingVertical: 15,
+    width: "100%",
+    borderRadius: 10,
+    alignItems: "center",
+    marginTop: 10,
+  },
+  buttonBack: {
+   // position: "absolute",
+    bottom: 0,
+    backgroundColor: "#4e9bde",
+    paddingVertical: 15,
+    width: "100%",
+    borderRadius: 25,
+    alignItems: "center",
+ //   marginTop: 10,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "600",
   },
 });
