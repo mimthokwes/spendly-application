@@ -2,7 +2,11 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { COLOR } from "../../constants/colors";
 
-export default function InputNumber({ value }) {
+
+interface InputNumberProps {
+  value?: string;
+}
+export default function InputNumber({ value = ""}: InputNumberProps) {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>

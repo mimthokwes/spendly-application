@@ -4,7 +4,7 @@ import {COLOR} from '../../constants/colors'
 
 interface ProfileProps {
   imageSource: ImageSourcePropType; // ✅ tipe bawaan React Native untuk gambar
-  username: String;
+  username: string;
 }
 
 export default function Profile({ imageSource, username }: ProfileProps) {

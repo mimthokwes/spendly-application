@@ -1,13 +1,17 @@
 import React, { useState } from "react";
-import { View, TextInput, Button, StyleSheet, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  Alert,
+} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
-import { ThemedView } from "@/components/themed-view";
-import { ThemedText } from "@/components/themed-text";
-import { COLOR } from "../constants/colors";
+import { COLOR } from "../../constants/colors";
 import InputNumber from "@/components/loginComponents/inputNumber";
 import PasswordNumber from "@/components/loginComponents/passwordNumber";
-import { EXPO_PUBLIC_API_URL } from "@env";
 
 export default function RegisterScreen() {
   const router = useRouter();
@@ -16,6 +20,7 @@ export default function RegisterScreen() {
   const [password, setPassword] = useState("");
   const [showNumeric, setShowNumeric] = useState(false);
 
+
   const handleRegister = async () => {
     if (!username || !email || !password) {
       Alert.alert("Error", "Please fill all fields");
@@ -23,7 +28,7 @@ export default function RegisterScreen() {
     }
 
     try {
-      const res = await fetch(`${EXPO_PUBLIC_API_URL}/users/register`, {
+      const res = await fetch(`http://192.168.110.184:3001/api/users/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -37,7 +42,7 @@ export default function RegisterScreen() {
         await AsyncStorage.setItem("username", username);
         await AsyncStorage.setItem("email", email);
         Alert.alert("Success", data.message || "Registration successful!");
-        router.replace("/login");
+        router.replace("/auth/login");
       } else {
         Alert.alert("Error", data.message || "Failed to register");
       }
@@ -51,18 +56,18 @@ export default function RegisterScreen() {
     if (value === "ENTER") {
       handleRegister();
     } else if (value === "DELETE") {
-      setPassword(password.slice(0, -1));
+      setPassword((p) => p.slice(0, -1));
     } else if (password.length < 6) {
-      setPassword(password + value);
+      setPassword((p) => p + value);
     }
   };
 
   return (
-    <ThemedView style={styles.container}>
-      <ThemedText type="title" style={styles.createAccount}>Create Account</ThemedText>
-
+    <View style={styles.container}>
+      <Text style={styles.createAccount}>Create Account</Text>
+      {/* Wrapper untuk input teks */}
       {!showNumeric && (
-        <>
+        <View style={styles.formWrapper}>
           <TextInput
             style={styles.input}
             placeholder="Username"
@@ -79,17 +84,21 @@ export default function RegisterScreen() {
             keyboardType="email-address"
           />
 
-          <Button title="Set Password" onPress={() => setShowNumeric(true)}/>
-        </>
+          <Button title="Set Password" onPress={() => setShowNumeric(true)} />
+        </View>
       )}
 
+      {/* Wrapper untuk numeric keypad */}
       {showNumeric && (
-        <>
+        <View style={styles.formWrapper}>
           <InputNumber value={password} />
           <PasswordNumber onPress={handleNumberPress} />
-        </>
+          <View style={{ marginTop: 12, width: "100%" }}>
+            <Button title="Back" onPress={() => setShowNumeric(false)} />
+          </View>
+        </View>
       )}
-    </ThemedView>
+    </View>
   );
 }
 
@@ -104,6 +113,10 @@ const styles = StyleSheet.create({
   createAccount: {
     fontWeight: "bold",
     marginBottom: 50,
+  },
+  formWrapper: {
+    width: "100%",
+    alignItems: "center",
   },
   input: {
     width: "100%",

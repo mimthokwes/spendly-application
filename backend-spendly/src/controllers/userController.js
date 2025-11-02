@@ -1,6 +1,8 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
+import Transaction from "../models/Transaction.js";
+import Saving from "../models/Savings.js";
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "30d" });
@@ -148,6 +150,11 @@ export const deleteUserById = async (req, res) => {
     const { id } = req.params; // ambil id dari URL params
 
     const deletedUser = await User.findByIdAndDelete(id);
+      // 1. Hapus semua transactions milik user
+    await Transaction.deleteMany({ userId: id });
+
+    // 2. Hapus semua savings milik user
+    await Saving.deleteMany({ userId: id });
 
     if (!deletedUser) {
       return res

@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { COLOR } from "../../constants/colors";
 
-export default function PasswordNumber({ onPress }) {
+export default function PasswordNumber({ onPress }: { onPress: (value: string) => void }) {
   const rows = [
     ["1", "2", "3"],
     ["4", "5", "6"],
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
   deleteButton: {
-    backgroundColor: COLOR.danger || "tomato", // fallback jika belum ada COLOR.danger
+    backgroundColor: COLOR.red || "tomato", // fallback jika belum ada COLOR.danger
     width: 100,
     borderRadius: 30,
   },
