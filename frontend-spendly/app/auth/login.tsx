@@ -6,6 +6,7 @@ import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
 import { COLOR } from "../../constants/colors";
+import { ENV } from "../../env";
 import { setToken } from "../../lib/authStore";
 
 const styles = StyleSheet.create({
@@ -47,7 +48,7 @@ export default function LoginScreen() {
     if (value === "ENTER") {
       console.log("Entered password:", password);
       try {
-        const res = await fetch("http://192.168.110.184:3001/api/users/login", {
+        const res = await fetch(`${ENV.API_URL}/users/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

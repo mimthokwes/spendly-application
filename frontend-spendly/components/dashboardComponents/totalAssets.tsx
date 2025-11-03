@@ -46,6 +46,15 @@ export default function TotalAssets() {
         );
         const prevData = await prevRes.json();
 
+        const SaldoLast = await fetch(`${ENV.API_URL}/transactions`,{
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          }
+        });
+        const Saldo = await SaldoLast.json();
+
         // Hitung total asset bulan ini
         const calcTotal = (arr: any[]) => {
           const income = arr
@@ -63,8 +72,10 @@ export default function TotalAssets() {
         const totalPrev = calcTotal(
           Array.isArray(prevData.data) ? prevData.data : []
         );
+        const totalSaldo = calcTotal(
+          Array.isArray(Saldo.data) ? Saldo.data : [])
 
-        setTotalAssets(totalNow);
+        setTotalAssets(totalSaldo);
 
         // Hitung persentase perubahan
         let percentage = 0;

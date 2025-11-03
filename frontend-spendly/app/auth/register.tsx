@@ -12,11 +12,12 @@ import { useRouter } from "expo-router";
 import { COLOR } from "../../constants/colors";
 import InputNumber from "@/components/registerComponents/inputNumber";
 import PasswordNumber from "@/components/loginComponents/passwordNumber";
+import { ENV } from "../../env";
 
 export default function RegisterScreen() {
   const router = useRouter();
-  const [username, setUsername] = useState(null);
-  const [email, setEmail] = useState(null);
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showNumeric, setShowNumeric] = useState(false);
 
@@ -27,7 +28,7 @@ export default function RegisterScreen() {
     }
 
     try {
-      const res = await fetch(`http://192.168.110.184:3001/api/users/register`, {
+      const res = await fetch(`${ENV.API_URL}/users/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

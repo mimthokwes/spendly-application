@@ -13,14 +13,19 @@ export const connectDB = async () => {
 
     const mongoURI = `mongodb://${mongoUser}:${mongoPassword}@${mongoHost}:${mongPort}/${mongoDB}?authSource=admin`;
 
-
-
     mongoose.connect(mongoURI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
 
-    console.log("Connected to MongoDB Successfuly");
+    mongoose.connection.on("connected", () => {
+      console.log("✅ Connected to MongoDB Successfully");
+    });
+
+    mongoose.connection.on("error", (err) => {
+      console.error("❌ MongoDB connection error:", err.message);
+      process.exit(1);
+    });
   } catch (error) {
     console.error("Error connecting to MongoDB:", error.message);
     process.exit(1);
