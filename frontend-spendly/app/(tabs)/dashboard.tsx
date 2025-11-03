@@ -1,12 +1,13 @@
 import { Link } from "expo-router";
 import { View, Text, StyleSheet } from "react-native";
-import {COLOR} from '../../constants/colors'
+import {COLOR} from '../../constants/colors';
+import TotalAssets from "../../components/dashboardComponents/totalAssets";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
+   // justifyContent: "center",
     backgroundColor: COLOR.primary
   },
   text: {
@@ -15,9 +16,10 @@ const styles = StyleSheet.create({
 })
 
 export default function DashboardScreen() {
+
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Ini halaman Dashboard utama</Text>
+    <TotalAssets/>
     </View>
   );
 }

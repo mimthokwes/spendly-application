@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { useRouter } from "expo-router";
-import { View, StyleSheet, Alert } from "react-native";
-import Profile from "@/components/loginComponents/profile";
 import InputNumber from "@/components/loginComponents/inputNumber";
 import PasswordNumber from "@/components/loginComponents/passwordNumber";
+import Profile from "@/components/loginComponents/profile";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { Alert, StyleSheet, View } from "react-native";
 import { COLOR } from "../../constants/colors";
+import { setToken } from "../../lib/authStore";
 
 const styles = StyleSheet.create({
   container: {
@@ -58,13 +59,22 @@ export default function LoginScreen() {
             },
           }),
         });
+
         const data = await res.json();
+
+        
         if (res.ok) {
-          Alert.alert("Success Login Walcome", data.message);
-          router.replace("/dashboard");
+          setToken(data.data.token);
+          router.push({
+            pathname:"/dashboard",
+          });
         } else {
-          Alert.alert("Error", data.message);
+          Alert.alert("Error","Password Salah", data.message);
         }
+
+    if (data.token) {
+      setToken(data.token); // simpan ke context
+    }
       } catch (error) {
         console.error("Error logging in:", error);
         Alert.alert("Error", "Failed to connect the server");
