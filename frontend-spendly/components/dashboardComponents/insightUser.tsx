@@ -53,7 +53,7 @@ export default function InsightUser({
 const AchivementList = ({percentageChange}: {percentageChange: number | null}) => {
   return (
     <View>
-      {percentageChange !== null && percentageChange >= 20 && (
+      {percentageChange !== null && percentageChange >= 2 && (
           <View style={[{flexDirection: "row", alignItems: "center"}]}>
             <MaterialIcons 
             name="moving" 
@@ -62,7 +62,7 @@ const AchivementList = ({percentageChange}: {percentageChange: number | null}) =
             marginRight={5}
             />
             <Text style={[{ color: percentageChange >= 0 ? COLOR.white : COLOR.grey }]}>
-              Income anda {""}
+              Sisa income {""}
               {percentageChange >= 0 ? "naik" : "turun"}{" "}
               {Math.abs(percentageChange).toFixed(1)}% dari bulan lalu
             </Text>

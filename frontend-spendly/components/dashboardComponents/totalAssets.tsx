@@ -82,9 +82,9 @@ export default function TotalAssets({ onChangePercentage }: { onChangePercentage
                   styles.info,
                   { color: percentageChange >= 0 ? COLOR.green : COLOR.red },
                 ]}
-              >
+              > Asset Grow Rate {}
                 {percentageChange >= 0 ? "Naik" : "Turun"}{" "}
-                {Math.abs(percentageChange).toFixed(1)}% dari bulan lalu
+                {Math.abs(percentageChange).toFixed(1)}%
               </Text>
             )}
           </View>
