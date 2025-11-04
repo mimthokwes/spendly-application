@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 import {COLOR} from '../../constants/colors';
 import TotalAssets from "../../components/dashboardComponents/totalAssets";
 import TransactionsInfo from "@/components/dashboardComponents/transactionsInfo";
+import InsightUser from "@/components/dashboardComponents/insightUser";
 
 const styles = StyleSheet.create({
   container: {
@@ -23,6 +24,7 @@ export default function DashboardScreen() {
     <View style={styles.container}>
     <TotalAssets/>
     <TransactionsInfo/>
+    <InsightUser/>
     </View>
   );
 }

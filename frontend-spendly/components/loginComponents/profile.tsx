@@ -11,7 +11,7 @@ export default function Profile({ imageSource, username }: ProfileProps) {
   return (
     <View style={styles.container}>
       <Image source={imageSource} style={styles.image} />
-      <Text style={styles.text}>{username}</Text>
+      <Text style={styles.text}>Walcome {username}</Text>
     </View>
   );
 }

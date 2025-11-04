@@ -2,9 +2,11 @@ import { Tabs } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
 import { StyleSheet, View } from "react-native";
 import {COLOR} from "../../constants/colors";
+import { TransactionProvider } from "../../contexts/transactionsContext";
 
 export default function TabsLayout() {
   return (
+    <TransactionProvider>
     <Tabs
       screenOptions={{
         headerShown: false,
@@ -57,6 +59,7 @@ export default function TabsLayout() {
         }}
       />
     </Tabs>
+    </TransactionProvider>
   );
 }
 

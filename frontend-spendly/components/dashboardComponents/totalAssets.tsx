@@ -2,96 +2,68 @@ import { MaterialIcons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { COLOR } from "../../constants/colors";
+import { useTransactions } from "../../contexts/transactionsContext";
+import { getToken } from "../../contexts/authStore"; // 🔥 ambil token langsung dari store
 import { ENV } from "../../env";
-import { getToken } from "../../lib/authStore"; // 🔥 ambil token langsung dari store
 
 export default function TotalAssets() {
- // const { token } = useAuth();
+  const { transactions, loading } = useTransactions();
   const [totalAssets, setTotalAssets] = useState<number>(0);
   const [percentageChange, setPercentageChange] = useState<number | null>(null);
-  const [loading, setLoading] = useState(true);
+  //const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchAssets = async () => {
-      try {
-        setLoading(true);
-        const token = getToken(); // 🔥 ambil token dari global variable
+    if (!loading && transactions.length > 0) {
+      const now = new Date();
+      const currentMonth = now.getMonth(); // 0–11
+      const currentYear = now.getFullYear();
 
-        const now = new Date();
-        const currentYear = now.getFullYear();
-        const currentMonth = now.getMonth() + 1;
+      // 🔥 Hitung bulan & tahun sebelumnya dengan aman
+      const prev = new Date(currentYear, currentMonth -1 , 1);
+      const prevMonth = prev.getMonth(); 
+      const prevYear = prev.getFullYear(); 
 
-        // bulan sebelumnya
-        const prev = new Date(currentYear, now.getMonth() - 1, 1);
-        const prevYear = prev.getFullYear();
-        const prevMonth = prev.getMonth() + 1;
 
-        // Fetch data bulan ini
-        const currentRes = await fetch(
-          `${ENV.API_URL}/transactions?year=${currentYear}&month=${currentMonth}`,
-          { method: "GET", 
-            headers: { "Content-Type": "application/json",
-               Authorization: `Bearer ${token}` 
-            } }
+      const currentMonthTx = transactions.filter((t: { date: Date }) => {
+        const d = new Date(t.date);
+        return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+      });
+    //  console.log(currentMonthTx,currentMonth, currentYear);
+
+      const prevMonthTx = transactions.filter((t: { date: Date }) => {
+        const d = new Date(t.date);
+        return (
+          d.getMonth() === prevMonth && d.getFullYear() === prevYear
         );
-        const currentData = await currentRes.json();
+      });
 
-        // Fetch data bulan lalu
-        const prevRes = await fetch(
-          `${ENV.API_URL}/transactions?year=${prevYear}&month=${prevMonth}`,
-          { method: "GET", 
-            headers: { "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`
-           } }
-        );
-        const prevData = await prevRes.json();
+     // console.log(prevMonthTx,prevMonth , prevYear);
 
-        const SaldoLast = await fetch(`${ENV.API_URL}/transactions`,{
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-          }
-        });
-        const Saldo = await SaldoLast.json();
+      const calcTotal = (arr: any[]) => {
+        const income = arr
+          .filter((t) => t.type === "income")
+          .reduce((a, b) => a + b.nominal, 0);
+        const spending = arr
+          .filter((t) => t.type === "spending")
+          .reduce((a, b) => a + b.nominal, 0);
+        return income - spending;
+      };
 
-        // Hitung total asset bulan ini
-        const calcTotal = (arr: any[]) => {
-          const income = arr
-            .filter((t) => t.type === "income")
-            .reduce((a, b) => a + (b.nominal || 0), 0);
-          const spending = arr
-            .filter((t) => t.type === "spending")
-            .reduce((a, b) => a + (b.nominal || 0), 0);
-          return income - spending;
-        };
+      const totalNow = calcTotal(currentMonthTx);
+      const totalPrev = calcTotal(prevMonthTx);
+      const totalSaldo = calcTotal(transactions);
+    //  console.log(totalNow, totalPrev, totalSaldo);
 
-        const totalNow = calcTotal(
-          Array.isArray(currentData.data) ? currentData.data : []
-        );
-        const totalPrev = calcTotal(
-          Array.isArray(prevData.data) ? prevData.data : []
-        );
-        const totalSaldo = calcTotal(
-          Array.isArray(Saldo.data) ? Saldo.data : [])
+      setTotalAssets(totalSaldo);
 
-        setTotalAssets(totalSaldo);
-
-        // Hitung persentase perubahan
-        let percentage = 0;
-        if (totalPrev !== 0) {
-          percentage = ((totalNow - totalPrev) / totalPrev) * 100;
-        }
+      if (totalPrev !== 0) {
+        const percentage = ((totalNow - totalPrev) / totalPrev) * 100;
         setPercentageChange(percentage);
-      } catch (error) {
-        console.error("Error fetching transactions:", error);
-      } finally {
-        setLoading(false);
+      } else {
+        setPercentageChange(null);
       }
-    };
-
-    fetchAssets();
-  }, []);
+    }
+  }, [transactions, loading]);
 
   return (
     <View style={styles.bigContainer}>
@@ -102,7 +74,7 @@ export default function TotalAssets() {
           <View style={styles.content}>
             <Text style={styles.label}>Total Assets</Text>
             <Text style={styles.value}>
-              Rp {totalAssets?.toLocaleString("id-ID")}
+              Rp {totalAssets.toLocaleString("id-ID")}
             </Text>
             {percentageChange !== null && (
               <Text
