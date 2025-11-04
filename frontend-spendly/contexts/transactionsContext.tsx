@@ -12,6 +12,8 @@ export const TransactionProvider = ({
   const [transactions, setTransactions] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [percentageChange, setPercentageChange] = useState<number | null>(null);
+
 
   const fetchTransactions = async (year?: number, month?: number) => {
     try {
@@ -52,6 +54,7 @@ export const TransactionProvider = ({
         fetchTransactions,
         // addTransaction,
         //deleteTransaction,
+        percentageChange,
       }}
     >
       {children}

@@ -3,10 +3,8 @@ import React, { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { COLOR } from "../../constants/colors";
 import { useTransactions } from "../../contexts/transactionsContext";
-import { getToken } from "../../contexts/authStore"; // 🔥 ambil token langsung dari store
-import { ENV } from "../../env";
 
-export default function TotalAssets() {
+export default function TotalAssets({ onChangePercentage }: { onChangePercentage: (val: number | null) => void }) {
   const { transactions, loading } = useTransactions();
   const [totalAssets, setTotalAssets] = useState<number>(0);
   const [percentageChange, setPercentageChange] = useState<number | null>(null);
@@ -59,8 +57,10 @@ export default function TotalAssets() {
       if (totalPrev !== 0) {
         const percentage = ((totalNow - totalPrev) / totalPrev) * 100;
         setPercentageChange(percentage);
+        onChangePercentage(percentage);
       } else {
         setPercentageChange(null);
+        onChangePercentage(null);
       }
     }
   }, [transactions, loading]);
