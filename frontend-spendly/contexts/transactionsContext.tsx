@@ -41,6 +41,26 @@ export const TransactionProvider = ({
       setLoading(false);
     }
   };
+
+  const addTransaction = async (transaction: any) => {
+    try {
+      const token = getToken();
+      const res = await fetch(`${ENV.API_URL}/transactions`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ data: transaction }),
+      });
+      if (!res.ok) throw new Error("Failed to add transaction");
+      const data = await res.json();
+      fetchTransactions();
+    } catch (error: any) {
+      console.error("Something Wrong Happened", error);
+      setError(error.message);
+    }
+  }
   useEffect(() => {
     fetchTransactions();
   }, []);

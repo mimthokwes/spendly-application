@@ -1,35 +1,39 @@
 import React, { useState } from "react";
-import { Link } from "expo-router";
-import { View, Text, StyleSheet } from "react-native";
-import {COLOR} from '../../constants/colors';
+import { View, ScrollView, StyleSheet } from "react-native";
+import { COLOR } from "../../constants/colors";
 import TotalAssets from "../../components/dashboardComponents/totalAssets";
 import TransactionsInfo from "@/components/dashboardComponents/transactionsInfo";
 import InsightUser from "@/components/dashboardComponents/insightUser";
-import StatusKeuangan from "@/components/dashboardComponents/statusKeuangan";
+import StatusKeuangan from "@/components/dashboardComponents/cashFlow";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "column",
-    alignItems: "center",
-   // justifyContent: "center",
-    backgroundColor: COLOR.primary
+    backgroundColor: COLOR.primary,
   },
-  text: {
-    color: COLOR.white
-  }
-})
+  scrollView: {
+    flexGrow: 1,
+  },
+  contentContainer: {
+    alignItems: "center", // ⬅️ Pusatkan semua komponen di dalam ScrollView
+    paddingBottom: 20,
+  },
+});
 
 export default function DashboardScreen() {
-    const [percentageChange, setPercentageChange] = useState<number | null>(null);
+  const [percentageChange, setPercentageChange] = useState<number | null>(null);
 
   return (
     <View style={styles.container}>
-    <TotalAssets onChangePercentage={setPercentageChange}/>
-    <TransactionsInfo/>
-    <InsightUser percentageChange={percentageChange}/>
-    <StatusKeuangan/>
+      <ScrollView
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false} // opsional: sembunyikan scrollbar
+      >
+        <TotalAssets onChangePercentage={setPercentageChange} />
+        <TransactionsInfo />
+        <InsightUser percentageChange={percentageChange} />
+        <StatusKeuangan />
+      </ScrollView>
     </View>
   );
 }
-

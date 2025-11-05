@@ -1,12 +1,17 @@
-import { View, Text, StyleSheet } from "react-native";
-import {COLOR} from '../../constants/colors';
+import AllocationsInfo from "@/components/inputanComponents/allocations/allocationsInfo";
+import AllocationsMoney from "@/components/inputanComponents/allocations/addAllocationsMoney";
+import Allocations from "@/components/inputanComponents/allocations";
+import { StyleSheet, View } from "react-native";
+import { COLOR } from '../../constants/colors';
+import InputCatatanKeuangan from "@/components/inputanComponents/inputCatatanKeuangan";
+import OptionsCatatan from "@/components/inputanComponents/optionsCatatan";
 
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: "center",
-        justifyContent: "center",
+        //justifyContent: "center",
         backgroundColor: COLOR.primary
     },
     text: {
@@ -17,7 +22,9 @@ const styles = StyleSheet.create({
 export default function CatatanSceen() {
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>Ini halaman Catatan pengeluaran dan pemasukan</Text>
+            <Allocations/>
+            <OptionsCatatan/>
+            {/* <InputCatatanKeuangan/> */}
         </View>
     );
 }

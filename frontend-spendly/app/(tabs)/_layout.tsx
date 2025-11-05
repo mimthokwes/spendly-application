@@ -3,9 +3,11 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { StyleSheet, View } from "react-native";
 import {COLOR} from "../../constants/colors";
 import { TransactionProvider } from "../../contexts/transactionsContext";
+import { UsersProvider } from "@/contexts/usersContext";
 
 export default function TabsLayout() {
   return (
+    <UsersProvider>
     <TransactionProvider>
     <Tabs
       screenOptions={{
@@ -60,6 +62,7 @@ export default function TabsLayout() {
       />
     </Tabs>
     </TransactionProvider>
+    </UsersProvider>
   );
 }
 

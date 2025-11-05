@@ -60,7 +60,7 @@ export default function StatusKeuangan() {
             color={COLOR.white}
             marginRight={0}
           />
-          <Text style={styles.text}>Status Keuangan</Text>
+          <Text style={styles.text}>Cash Flow</Text>
         </View>
         <View style={styles.status}>
           <Text
@@ -85,7 +85,7 @@ export default function StatusKeuangan() {
 const styles = StyleSheet.create({
   container: {
     width: "95%",
-    height: 140,
+    height: 340,
     backgroundColor: COLOR.secondary,
     borderRadius: 15,
     marginTop: 10,
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
   },
   text: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: "bold",
     color: COLOR.white,
   },
