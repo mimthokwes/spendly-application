@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: COLOR.secondary,
     width: "100%",
-    padding: 20,
+    padding: 10,
     borderRadius: 25,
   },
   addButton: {
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
   icon: {
     position: "absolute",
     //top: 15,
-    bottom: 10,
+    bottom: 4,
     right: 25,
   },
 });

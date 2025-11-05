@@ -51,7 +51,7 @@ export const TransactionProvider = ({
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ data: transaction }),
+        body: JSON.stringify( transaction ),
       });
       if (!res.ok) throw new Error("Failed to add transaction");
       const data = await res.json();
@@ -72,7 +72,7 @@ export const TransactionProvider = ({
         loading,
         error,
         fetchTransactions,
-        // addTransaction,
+        addTransaction,
         //deleteTransaction,
         percentageChange,
       }}

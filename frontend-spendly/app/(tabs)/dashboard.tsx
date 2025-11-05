@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   contentContainer: {
-    alignItems: "center", // ⬅️ Pusatkan semua komponen di dalam ScrollView
+    alignItems: "center",
     paddingBottom: 20,
   },
 });
@@ -27,7 +27,7 @@ export default function DashboardScreen() {
     <View style={styles.container}>
       <ScrollView
         contentContainerStyle={styles.contentContainer}
-        showsVerticalScrollIndicator={false} // opsional: sembunyikan scrollbar
+        showsVerticalScrollIndicator={false} 
       >
         <TotalAssets onChangePercentage={setPercentageChange} />
         <TransactionsInfo />

@@ -8,7 +8,7 @@ export default function FinancialHistory() {
       <View style={styles.wrap}>
         <ScrollView style={styles.wrap} showsVerticalScrollIndicator={false}>
           <View style={styles.wrapper}>
-            <Text style={styles.text}>Financial Historysajgdajstgdjags</Text>
+            <Text style={styles.text}>Financial History</Text>
           </View>
         </ScrollView>
       </View>
