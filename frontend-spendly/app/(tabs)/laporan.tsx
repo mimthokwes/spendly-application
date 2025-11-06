@@ -1,12 +1,14 @@
 import { View, Text, StyleSheet } from "react-native";
 import {COLOR} from '../../constants/colors'
 import { Link } from "expo-router";
+import SpandukLaporan from "@/components/laporanComponents/spandukLaporan";
+import DonutChart from "@/components/laporanComponents/donatChart";
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: "center",
-        justifyContent: "center",
+        //justifyContent: "center",
         backgroundColor: COLOR.primary
     },
     text: {
@@ -17,9 +19,8 @@ const styles = StyleSheet.create({
 export default function LaporanScreen() {
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>Ini halaman laporan keuangan</Text>
-            <Link href="/" style={styles.text}> to apps</Link>
-            
+            <SpandukLaporan/>
+            <DonutChart/>
         </View>
     );
 }

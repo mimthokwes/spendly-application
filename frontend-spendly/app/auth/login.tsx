@@ -19,8 +19,6 @@ const styles = StyleSheet.create({
   },
 });
 
-
-
 export default function LoginScreen() {
   const router = useRouter();
   const [username, setUsername] = useState("");
@@ -47,7 +45,12 @@ export default function LoginScreen() {
 
   const handlePress = async (value: any) => {
     if (value === "ENTER") {
-     // console.log("Entered password:", password);
+      // console.log("Entered password:", password);
+      if (!email) {
+        Alert.alert("Error", "Email not found");
+        router.replace("/auth/register");
+        return;
+      }
       try {
         const res = await fetch(`${ENV.API_URL}/users/login`, {
           method: "POST",
@@ -64,19 +67,18 @@ export default function LoginScreen() {
 
         const data = await res.json();
 
-        
         if (res.ok) {
           setToken(data.data.token);
           router.push({
-            pathname:"/dashboard",
+            pathname: "/dashboard",
           });
         } else {
-          Alert.alert("Error","Password Salah", data.message);
+          Alert.alert("Error", "Password Salah", data.message);
         }
 
-    if (data.token) {
-      setToken(data.token); // simpan ke context
-    }
+        if (data.token) {
+          setToken(data.token); // simpan ke context
+        }
       } catch (error) {
         console.error("Error logging in:", error);
         Alert.alert("Error", "Failed to connect the server");

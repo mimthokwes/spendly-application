@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     //  justifyContent: "center",
     // alignItems: "center",
-    paddingLeft: 30,
+    paddingLeft: 20,
     paddingTop: 10,
   },
   title: {
@@ -62,7 +62,7 @@ const AchivementList = ({percentageChange}: {percentageChange: number | null}) =
             marginRight={5}
             />
             <Text style={[{ color: percentageChange >= 0 ? COLOR.white : COLOR.grey }]}>
-              Sisa income {""}
+              Assets grow rate {""}
               {percentageChange >= 0 ? "naik" : "turun"}{" "}
               {Math.abs(percentageChange).toFixed(1)}% dari bulan lalu
             </Text>

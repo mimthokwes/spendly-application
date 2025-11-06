@@ -3,7 +3,6 @@ import AllocationsMoney from "@/components/inputanComponents/allocations/addAllo
 import Allocations from "@/components/inputanComponents/allocations";
 import { StyleSheet, View, ScrollView } from "react-native";
 import { COLOR } from "../../constants/colors";
-import InputCatatanKeuangan from "@/components/inputanComponents/inputCatatanKeuangan";
 import OptionsCatatan from "@/components/inputanComponents/optionsCatatan";
 
 const styles = StyleSheet.create({
@@ -28,8 +27,7 @@ export default function CatatanSceen() {
      
         <Allocations />
         <OptionsCatatan />
-        {/* <InputCatatanKeuangan/> */}
-     
+        
     </View>
   );
 }

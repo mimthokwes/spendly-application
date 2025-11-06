@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Platform,
   Alert,
+  Modal,
 } from "react-native";
 import React, { useState } from "react";
 import { COLOR } from "@/constants/colors";
@@ -18,9 +19,20 @@ export default function FinancialRecord() {
   const { addTransaction } = useTransactions();
 
   const [type, setType] = useState("");
-  const [nominal, setNominal] = useState(""); // tampilannya (diformat)
-  const [rawNominal, setRawNominal] = useState<number | null>(null); // angka murni
+  const [nominal, setNominal] = useState("");
+  const [rawNominal, setRawNominal] = useState<number | null>(null);
   const [category, setCategory] = useState("");
+  const [categories, setCategories] = useState([
+    "Food & Beverages",
+    "Transportation",
+    "Shopping",
+    "Bills & Utilities",
+    "Entertainment / Leisure",
+    "Income / Salary",
+    "Others"
+  ]); // Default categories
+  const [showAddCategory, setShowAddCategory] = useState(false);
+  const [newCategory, setNewCategory] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -45,21 +57,15 @@ export default function FinancialRecord() {
     }
   };
 
-  // ✅ Saat user mengetik nominal
   const handleNominalChange = (text: string) => {
-    // Hapus karakter selain angka
     const numeric = text.replace(/\D/g, "");
-
     if (!numeric) {
       setRawNominal(null);
       setNominal("");
       return;
     }
-
     const numberValue = Number(numeric);
     setRawNominal(numberValue);
-
-    // Format tampilan ke locale Indonesia (contoh: 10.000)
     const formatted = numberValue.toLocaleString("id-ID");
     setNominal(formatted);
   };
@@ -72,7 +78,7 @@ export default function FinancialRecord() {
 
     const transaction = {
       type,
-      nominal: rawNominal, // 🔥 kirim angka murni ke backend
+      nominal: rawNominal,
       category,
       description,
       date: date.toISOString(),
@@ -91,6 +97,26 @@ export default function FinancialRecord() {
       Alert.alert("Error", "Failed to add transaction.");
       console.error(error);
     }
+  };
+
+  const handleAddCategory = () => {
+    const trimmed = newCategory.trim();
+    if (!trimmed) {
+      Alert.alert("Warning", "Category name cannot be empty!");
+      return;
+    }
+
+    // Cegah duplikasi
+    if (categories.includes(trimmed)) {
+      Alert.alert("Warning", "Category already exists!");
+      return;
+    }
+
+    const updated = [...categories, trimmed];
+    setCategories(updated);
+    setCategory(trimmed);
+    setNewCategory("");
+    setShowAddCategory(false);
   };
 
   return (
@@ -136,7 +162,7 @@ export default function FinancialRecord() {
           />
         </View>
 
-        {/* Category */}
+        {/* Category (Dynamic Picker) */}
         <View style={styles.wrapper}>
           <MaterialIcons
             name="category"
@@ -144,13 +170,26 @@ export default function FinancialRecord() {
             color={COLOR.white}
             style={styles.icon}
           />
-          <TextInput
-            style={styles.input}
-            placeholder="Category"
-            placeholderTextColor={COLOR.grey}
-            value={category}
-            onChangeText={setCategory}
-          />
+          <View style={styles.pickerContainer}>
+            <Picker
+              selectedValue={category}
+              onValueChange={(value) => {
+                if (value === "__add_new__") {
+                  setShowAddCategory(true);
+                } else {
+                  setCategory(value);
+                }
+              }}
+              dropdownIconColor={COLOR.white}
+              style={styles.picker}
+            >
+              <Picker.Item label="Select Category" value="" color={COLOR.grey} />
+              {categories.map((cat) => (
+                <Picker.Item key={cat} label={cat} value={cat} color={COLOR.black} />
+              ))}
+              <Picker.Item label="+ Add new category" value="__add_new__" color="blue" />
+            </Picker>
+          </View>
         </View>
 
         {/* Date */}
@@ -202,6 +241,29 @@ export default function FinancialRecord() {
           <Text style={styles.submitText}>Add Transaction</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Modal Add Category */}
+      <Modal visible={showAddCategory} transparent animationType="fade">
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalBox}>
+            <Text style={styles.modalTitle}>Add New Category</Text>
+            <TextInput
+              style={styles.modalInput}
+              placeholder="Category name"
+              value={newCategory}
+              onChangeText={setNewCategory}
+            />
+            <View style={styles.modalButtons}>
+              <TouchableOpacity onPress={() => setShowAddCategory(false)}>
+                <Text style={styles.cancelText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleAddCategory}>
+                <Text style={styles.addText}>Add</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -268,5 +330,43 @@ const styles = StyleSheet.create({
     color: COLOR.white,
     fontWeight: "bold",
     fontSize: 16,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.6)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalBox: {
+    backgroundColor: COLOR.secondary,
+    borderRadius: 10,
+    padding: 20,
+    width: "80%",
+  },
+  modalTitle: {
+    color: COLOR.white,
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  modalInput: {
+    backgroundColor: COLOR.black,
+    color: COLOR.white,
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    height: 45,
+  },
+  modalButtons: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 15,
+  },
+  cancelText: {
+    color: COLOR.grey,
+    fontWeight: "bold",
+  },
+  addText: {
+    color: COLOR.primary,
+    fontWeight: "bold",
   },
 });

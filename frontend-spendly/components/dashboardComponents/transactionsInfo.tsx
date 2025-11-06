@@ -3,8 +3,7 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { COLOR } from "../../constants/colors";
 import { useTransactions } from "../../contexts/transactionsContext";
-import { getToken } from "../../contexts/authStore";
-import { ENV } from "../../env";
+
 
 export default function TransactionsInfo() {
   const { transactions, loading } = useTransactions();
@@ -59,7 +58,7 @@ export default function TransactionsInfo() {
       <View style={styles.spending}>
         <View style={styles.title}>
           <MaterialIcons name="call-received" size={20} color={COLOR.red} />
-          <Text style={styles.textTitle}>Spending</Text>
+          <Text style={styles.textTitle}>Expenses</Text>
         </View>
         <Text style={styles.textSpending}>
           Rp {spending?.toLocaleString("id-ID")}
