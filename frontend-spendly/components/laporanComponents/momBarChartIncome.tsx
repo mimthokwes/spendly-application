@@ -55,7 +55,7 @@ export default function MomBarChartIncome() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Monthly Income (Last 5 Months)</Text>
+      <Text style={styles.text}>Income Grow Rate (Last 5 Months)</Text>
 
       {chartData.length > 0 ? (
         <View
@@ -80,7 +80,7 @@ export default function MomBarChartIncome() {
             yAxisTextStyle={{ color: COLOR.white }}
             barMarginBottom={5}
             isAnimated
-           // showValuesAsTopLabel
+            // showValuesAsTopLabel
             //topLabelTextStyle={{ color: COLOR.white, fontSize: 10 }}
             initialSpacing={(screenWidth * 0.9 - totalChartWidth) / 2} // <--- ini yang bikin chart tetap center
           />
@@ -88,14 +88,6 @@ export default function MomBarChartIncome() {
       ) : (
         <Text style={styles.loadingText}>Belum ada data income...</Text>
       )}
-
-      {/* Legend */}
-      <View style={styles.legendContainer}>
-        <View style={styles.legendItem}>
-          <View style={[styles.legendDot, { backgroundColor: COLOR.green }]} />
-          <Text style={styles.legendText}>Income</Text>
-        </View>
-      </View>
     </View>
   );
 }
@@ -116,28 +108,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: COLOR.white,
     textAlign: "center",
+    marginRight: 20,
   },
   loadingText: {
     color: COLOR.grey,
     marginTop: 15,
-  },
-  legendContainer: {
-    flexDirection: "row",
-    marginTop: 10,
-    gap: 20,
-  },
-  legendItem: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  legendDot: {
-    width: 14,
-    height: 14,
-    borderRadius: 7,
-    marginRight: 6,
-  },
-  legendText: {
-    color: COLOR.white,
-    fontSize: 13,
   },
 });

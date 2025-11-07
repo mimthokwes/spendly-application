@@ -60,7 +60,7 @@ export default function StatusKeuangan() {
             color={COLOR.white}
             marginRight={0}
           />
-          <Text style={styles.text}>Cash Flow</Text>
+          <Text style={styles.text}>Cash Flow Ratio</Text>
         </View>
         <View style={styles.status}>
           <Text

@@ -9,6 +9,7 @@ export default function TestChart() {
 
   const [chartData, setChartData] = useState<any[]>([]);
   const [totalSpending, setTotalSpending] = useState<number>(0);
+  const [totalIncome, setTotalIncome] = useState<number>(0);
 
   // Daftar kategori tetap
   const categories = [
@@ -34,8 +35,15 @@ export default function TestChart() {
 
   useEffect(() => {
     if (!loading && transactions.length > 0) {
-      // Ambil hanya spending
+      // Ambil spending dan income
       const spendings = transactions.filter((t: any) => t.type === "spending");
+      const incomes = transactions.filter((t: any) => t.type === "income");
+
+      // Hitung total spending & income
+      const totalSp = spendings.reduce((a, b) => a + b.nominal, 0);
+      const totalIn = incomes.reduce((a, b) => a + b.nominal, 0);
+      setTotalSpending(totalSp);
+      setTotalIncome(totalIn);
 
       // Kelompokkan nominal berdasarkan kategori
       const categoryTotals: Record<string, number> = {};
@@ -43,9 +51,6 @@ export default function TestChart() {
         const cat = t.category || "Others";
         categoryTotals[cat] = (categoryTotals[cat] || 0) + t.nominal;
       });
-
-      const total = Object.values(categoryTotals).reduce((a, b) => a + b, 0);
-      setTotalSpending(total);
 
       // Format untuk chart
       const formattedData = Object.keys(categoryTotals).map((category) => ({
@@ -58,56 +63,68 @@ export default function TestChart() {
     } else {
       setChartData([]);
       setTotalSpending(0);
+      setTotalIncome(0);
     }
   }, [transactions, loading]);
+
+  // Hitung Spending Ratio (%)
+  const spendingRatio =
+    totalIncome > 0 ? ((totalSpending / totalIncome) * 100).toFixed(1) : "0.0";
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Percentage of Expenses</Text>
       <View>
-      {chartData.length > 0 ? (
-        <View style={styles.content}>
-          {/* Chart di kiri */}
-          <PieChart
-            data={chartData}
-            radius={80}
-            donut
-            innerRadius={60}
-            innerCircleColor={COLOR.secondary}
-            showText
-            textColor={COLOR.white}
-            focusOnPress
-          />
+        {chartData.length > 0 ? (
+          <View style={styles.content}>
+            {/* Chart di kiri */}
+            <View style={styles.chartWrapper}>
+              <PieChart
+                data={chartData}
+                radius={80}
+                donut
+                innerRadius={60}
+                innerCircleColor={COLOR.secondary}
+                showText
+                textColor={COLOR.white}
+                focusOnPress
+              />
+              {/* Teks di tengah chart */}
+              <View style={styles.centerTextContainer}>
+                <Text style={styles.centerValue}>{spendingRatio}%</Text>
+                <Text style={styles.centerLabel}>Spending</Text>
+              </View>
+            </View>
 
-          {/* List kategori di kanan */}
-          <View style={styles.legendContainer}>
-            {chartData.map((item, index) => {
-              const percentage =
-                totalSpending > 0
-                  ? ((item.value / totalSpending) * 100).toFixed(1)
-                  : "0.0";
-              return (
-                <View key={index} style={styles.legendItem}>
-                  <View
-                    style={[
-                      styles.colorDot,
-                      { backgroundColor: item.color || COLOR.grey },
-                    ]}
-                  />
-                  <Text style={styles.legendText}>
-                    {item.label.length > 18
-                      ? item.label.slice(0, 18) + "..."
-                      : item.label}
-                  </Text>
-                  <Text style={styles.percentageText}>{percentage}%</Text>
-                </View>
-              );
-            })}
+            {/* List kategori di kanan */}
+            <View style={styles.legendContainer}>
+              {chartData.map((item, index) => {
+                const percentage =
+                  totalSpending > 0
+                    ? ((item.value / totalSpending) * 100).toFixed(1)
+                    : "0.0";
+                return (
+                  <View key={index} style={styles.legendItem}>
+                    <View
+                      style={[
+                        styles.colorDot,
+                        { backgroundColor: item.color || COLOR.grey },
+                      ]}
+                    />
+                    <Text style={styles.legendText}>
+                      {item.label.length > 18
+                        ? item.label.slice(0, 18) + "..."
+                        : item.label}
+                    </Text>
+                    <Text style={styles.percentageText}>{percentage}%</Text>
+                  </View>
+                );
+              })}
+            </View>
           </View>
-        </View>
-      ) : (
-        <Text style={{ color: COLOR.grey }}>No data available</Text>
-      )}
+        ) : (
+          <Text style={{ color: COLOR.grey }}>No data available</Text>
+        )}
       </View>
     </View>
   );
@@ -133,6 +150,27 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-around",
+  },
+  chartWrapper: {
+    position: "relative",
+    width: 160,
+    height: 160,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  centerTextContainer: {
+    position: "absolute",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  centerValue: {
+    color: COLOR.white,
+    fontWeight: "bold",
+    fontSize: 20,
+  },
+  centerLabel: {
+    color: COLOR.grey,
+    fontSize: 10,
   },
   legendContainer: {
     flex: 1,

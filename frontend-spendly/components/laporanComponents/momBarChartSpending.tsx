@@ -55,7 +55,7 @@ export default function MomBarChartSpending() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Monthly Spending (Last 5 Months)</Text>
+      <Text style={styles.text}>Spending Grow Rate (Last 5 Months)</Text>
 
       {chartData.length > 0 ? (
         <View
@@ -88,14 +88,6 @@ export default function MomBarChartSpending() {
       ) : (
         <Text style={styles.loadingText}>Belum ada data spending...</Text>
       )}
-
-      {/* Legend */}
-      <View style={styles.legendContainer}>
-        <View style={styles.legendItem}>
-          <View style={[styles.legendDot, { backgroundColor: COLOR.red}]} />
-          <Text style={styles.legendText}>Spending</Text>
-        </View>
-      </View>
     </View>
   );
 }
@@ -116,28 +108,10 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: COLOR.white,
     textAlign: "center",
+    marginRight: 20,
   },
   loadingText: {
     color: COLOR.grey,
     marginTop: 15,
-  },
-  legendContainer: {
-    flexDirection: "row",
-    marginTop: 10,
-    gap: 20,
-  },
-  legendItem: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  legendDot: {
-    width: 14,
-    height: 14,
-    borderRadius: 7,
-    marginRight: 6,
-  },
-  legendText: {
-    color: COLOR.white,
-    fontSize: 13,
   },
 });
