@@ -16,12 +16,13 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     alignItems: "center",
-    paddingBottom: 20,
+    paddingBottom: 120,
   },
 });
 
 export default function DashboardScreen() {
   const [percentageChange, setPercentageChange] = useState<number | null>(null);
+  const [visible, setVisible] = useState(false);
 
   return (
     <View style={styles.container}>
@@ -29,8 +30,8 @@ export default function DashboardScreen() {
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false} 
       >
-        <TotalAssets onChangePercentage={setPercentageChange} />
-        <TransactionsInfo />
+        <TotalAssets onChangePercentage={setPercentageChange} visible={visible} setVisible={setVisible}/>
+        <TransactionsInfo visible={visible}/>
         <InsightUser percentageChange={percentageChange} />
         <StatusKeuangan />
       </ScrollView>

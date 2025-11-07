@@ -5,7 +5,7 @@ import { COLOR } from "../../constants/colors";
 import { useTransactions } from "../../contexts/transactionsContext";
 
 
-export default function TransactionsInfo() {
+export default function TransactionsInfo({ visible }: { visible: boolean }) {
   const { transactions, loading } = useTransactions();
   //const [loading, setLoading] = useState(true);
   const [income, setIncome] = useState(0);
@@ -50,9 +50,13 @@ export default function TransactionsInfo() {
           <MaterialIcons name="call-made" size={20} color={COLOR.green} />
           <Text style={styles.textTitle}>Income</Text>
         </View>
+        {visible ? (
         <Text style={styles.textIncome}>
           Rp {income?.toLocaleString("id-ID")}
         </Text>
+        ) : (
+          <Text style={styles.textIncome}>Rp *****</Text>
+        )}
         <Text style={styles.text}>Bulan ini</Text>
       </View>
       <View style={styles.spending}>
@@ -60,9 +64,13 @@ export default function TransactionsInfo() {
           <MaterialIcons name="call-received" size={20} color={COLOR.red} />
           <Text style={styles.textTitle}>Expenses</Text>
         </View>
+        {visible ? (
         <Text style={styles.textSpending}>
           Rp {spending?.toLocaleString("id-ID")}
         </Text>
+        ) : (
+          <Text style={styles.textSpending}>Rp *****</Text>
+        )}
         <Text style={styles.text}>Bulan ini</Text>
       </View>
     </View>

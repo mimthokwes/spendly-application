@@ -1,14 +1,27 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
 import { COLOR } from "../../constants/colors";
 import { useTransactions } from "../../contexts/transactionsContext";
 
-export default function TotalAssets({ onChangePercentage }: { onChangePercentage: (val: number | null) => void }) {
+export default function TotalAssets({ 
+  onChangePercentage,
+  visible, 
+  setVisible 
+}: { 
+  onChangePercentage: (val: number | null) => void;
+  visible: boolean;
+  setVisible: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+
   const { transactions, loading } = useTransactions();
   const [totalAssets, setTotalAssets] = useState<number>(0);
   const [percentageChange, setPercentageChange] = useState<number | null>(null);
   //const [loading, setLoading] = useState(true);
+
+  const hadleVisible = () => {
+    setVisible(!visible);
+  };
 
   useEffect(() => {
     if (!loading && transactions.length > 0) {
@@ -73,9 +86,13 @@ export default function TotalAssets({ onChangePercentage }: { onChangePercentage
         ) : (
           <View style={styles.content}>
             <Text style={styles.label}>Total Assets</Text>
-            <Text style={styles.value}>
+            {visible ? (
+              <Text style={styles.value}>
               Rp {totalAssets.toLocaleString("id-ID")}
             </Text>
+            ) : (
+              <Text style={styles.value}>Rp *****</Text>
+            )}
             {percentageChange !== null && (
               <Text
                 style={[
@@ -91,7 +108,13 @@ export default function TotalAssets({ onChangePercentage }: { onChangePercentage
         )}
       </View>
       <View style={styles.icon}>
-        <MaterialIcons name="visibility" size={36} color={COLOR.white} />
+        <Pressable onPress={hadleVisible}>
+          {visible ? (
+            <MaterialIcons name="visibility" size={36} color={COLOR.white} />
+          ) : (
+            <MaterialIcons name="visibility-off" size={36} color={COLOR.white} />
+          )}
+        </Pressable>
       </View>
     </View>
   );
@@ -103,7 +126,7 @@ const styles = StyleSheet.create({
     height: 170,
     width: "95%",
     backgroundColor: COLOR.secondary,
-    marginTop: 70,
+    marginTop: 60,
     borderRadius: 25,
     justifyContent: "space-between",
     padding: 20,
