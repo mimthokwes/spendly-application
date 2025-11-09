@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "spendly",
+    "name": "",
     "slug": "spendly",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/icon-baru.png",
     "scheme": "spendlynew",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,

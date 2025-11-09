@@ -32,7 +32,7 @@ export default function DashboardScreen() {
       >
         <TotalAssets onChangePercentage={setPercentageChange} visible={visible} setVisible={setVisible}/>
         <TransactionsInfo visible={visible}/>
-        <InsightUser percentageChange={percentageChange} />
+        <InsightUser />
         <StatusKeuangan />
       </ScrollView>
     </View>

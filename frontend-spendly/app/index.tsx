@@ -1,5 +1,5 @@
 import { Text, View, StyleSheet, Pressable } from "react-native";
-import { useRouter, Link } from "expo-router";
+import { useRouter, Link, Redirect } from "expo-router";
 
 const styles = StyleSheet.create({
   container: {
@@ -22,19 +22,5 @@ const styles = StyleSheet.create({
 });
 
 export default function Index() {
-  return (
-    <View style={styles.container}>
-      <Text>Welcome To Dahlan Study</Text>
-      <Link href="/auth/login" asChild>
-        <Pressable style={styles.button}>
-          <Text style={styles.buttonText}>Login</Text>
-        </Pressable>
-      </Link>
-      <Link href="/dashboard" asChild>
-        <Pressable style={styles.button}>
-          <Text style={styles.buttonText}>Dashboard</Text>
-        </Pressable>
-      </Link>
-    </View>
-  );
+  return <Redirect href="/auth/login" />;
 }

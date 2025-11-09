@@ -5,6 +5,7 @@ import SpandukLaporan from "@/components/laporanComponents/spandukLaporan";
 import TestChart from "@/components/laporanComponents/percentageExpenses";
 import MomBarChartIncome from "@/components/laporanComponents/momBarChartIncome";
 import MomBarChartSpending from "@/components/laporanComponents/momBarChartSpending";
+import FinancialRadar from "@/components/laporanComponents/radarChart";
 
 const styles = StyleSheet.create({
   container: {
@@ -33,6 +34,7 @@ export default function LaporanScreen() {
         <TestChart />
         <MomBarChartIncome/>
         <MomBarChartSpending/>
+	<FinancialRadar/>
       </ScrollView>
     </View>
   );

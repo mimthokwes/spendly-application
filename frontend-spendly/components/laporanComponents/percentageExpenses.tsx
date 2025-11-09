@@ -40,8 +40,8 @@ export default function TestChart() {
       const incomes = transactions.filter((t: any) => t.type === "income");
 
       // Hitung total spending & income
-      const totalSp = spendings.reduce((a, b) => a + b.nominal, 0);
-      const totalIn = incomes.reduce((a, b) => a + b.nominal, 0);
+      const totalSp = spendings.reduce((a: any, b: any) => a + b.nominal, 0);
+      const totalIn = incomes.reduce((a: any, b: any) => a + b.nominal, 0);
       setTotalSpending(totalSp);
       setTotalIncome(totalIn);
 

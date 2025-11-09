@@ -1,73 +1,51 @@
 import { View, Text, StyleSheet } from "react-native";
 import { COLOR } from "../../constants/colors";
 import { MaterialIcons } from "@expo/vector-icons";
+import InsightsUser from "./(insights)/insightsUser";
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: COLOR.secondary,
-    height: 170,
-    width: "95%",
-    borderRadius: 25,
-    marginTop: 10,
-    //  justifyContent: "center",
-    // alignItems: "center",
-    paddingLeft: 20,
-    paddingTop: 10,
-  },
-  title: {
-    flexDirection: "row",
-    alignItems: "center",
-    // marginBottom: 10,
-    //marginTop: 3,
-  },
-  textTitle: {
-    color: COLOR.white,
-    fontSize: 28,
-    fontWeight: "bold",
-  },
-});
-
-export default function InsightUser({
-  percentageChange,
-}: {
-  percentageChange: number | null;
-}) {
+export default function InsightUser() {
   return (
     <View style={styles.container}>
-      <View style={styles.title}>
+      {/* Header */}
+      <View style={styles.header}>
         <Text style={styles.textTitle}>Insights</Text>
         <MaterialIcons
           name="insights"
-          size={28}
+          size={26}
           color={COLOR.white}
-          marginLeft={10}
+          style={{ marginLeft: 8 }}
         />
       </View>
-      <View style={[{flexDirection: "column"}]}>
-        <AchivementList percentageChange={percentageChange} />
+
+      {/* Isi */}
+      <View style={styles.content}>
+        <InsightsUser />
       </View>
     </View>
   );
 }
 
-const AchivementList = ({percentageChange}: {percentageChange: number | null}) => {
-  return (
-    <View>
-      {percentageChange !== null && percentageChange >= 2 && (
-          <View style={[{flexDirection: "row", alignItems: "center"}]}>
-            <MaterialIcons 
-            name="moving" 
-            size={24} 
-            color={COLOR.green} 
-            marginRight={5}
-            />
-            <Text style={[{ color: percentageChange >= 0 ? COLOR.white : COLOR.grey }]}>
-              Assets grow rate {""}
-              {percentageChange >= 0 ? "naik" : "turun"}{" "}
-              {Math.abs(percentageChange).toFixed(1)}% dari bulan lalu
-            </Text>
-          </View>
-        )}
-    </View>
-  );
-};
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: COLOR.secondary,
+    borderRadius: 20,
+    width: "95%",
+    alignSelf: "center",
+    padding: 16,
+    marginTop: 10,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  textTitle: {
+    color: COLOR.white,
+    fontSize: 24,
+    fontWeight: "bold",
+  },
+  content: {
+    flexDirection: "column",
+    gap: 6,
+  },
+});
