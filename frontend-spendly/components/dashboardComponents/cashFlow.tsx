@@ -85,11 +85,11 @@ export default function StatusKeuangan() {
 const styles = StyleSheet.create({
   container: {
     width: "95%",
-    height: 340,
     backgroundColor: COLOR.secondary,
     borderRadius: 15,
     marginTop: 10,
     paddingTop: 15,
+    paddingBottom: 25,
     paddingLeft: 20,
   },
   text: {
