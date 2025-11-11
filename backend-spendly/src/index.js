@@ -5,6 +5,7 @@ import { connectDB } from "./config/db.js";
 import userRoutes from "./routes/userRoutes.js";
 import transactionRoutes from "./routes/transactionRoutes.js";
 import savingRoutes from "./routes/savingRoutes.js";
+import chatbotRoutes from "./routes/chatBotRoutes.js";
 
 dotenv.config({quiet: true});
 
@@ -18,6 +19,7 @@ connectDB();
 app.use("/api/users", userRoutes);
 app.use("/api/transactions", transactionRoutes);
 app.use("/api/savings", savingRoutes);
+app.use("/api/chatbot", chatbotRoutes);
 
 // server run
 const PORT = process.env.PORT || 3001;

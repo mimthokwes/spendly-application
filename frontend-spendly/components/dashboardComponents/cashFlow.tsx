@@ -49,7 +49,7 @@ export default function StatusKeuangan() {
         }
     };
     fetchData();
-  });
+  }, [transactions, loading]);
   return (
     <View style={styles.container}>
       <View style={styles.wrapper}>

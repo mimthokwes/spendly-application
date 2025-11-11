@@ -4,9 +4,11 @@ import { StyleSheet, View } from "react-native";
 import {COLOR} from "../../constants/colors";
 import { TransactionProvider } from "../../contexts/transactionsContext";
 import { UsersProvider } from "@/contexts/usersContext";
+import { SavingsProvider } from "@/contexts/savingsContext";
 
 export default function TabsLayout() {
   return (
+    <SavingsProvider>
     <UsersProvider>
     <TransactionProvider>
     <Tabs
@@ -63,6 +65,7 @@ export default function TabsLayout() {
     </Tabs>
     </TransactionProvider>
     </UsersProvider>
+    </SavingsProvider>
   );
 }
 

@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: COLOR.secondary,
     width: "100%",
-    padding: 10,
+    padding: 20,
     borderRadius: 25,
   },
   addButton: {

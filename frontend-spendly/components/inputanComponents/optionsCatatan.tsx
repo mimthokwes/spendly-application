@@ -1,12 +1,13 @@
-import { View, Text, StyleSheet, Pressable } from 'react-native'
-import React, {useState} from 'react'
-import { COLOR } from '../../constants/colors';
-import FinancialRecord from './options/financialRecord';
-import FinancialHistory from './options/financialHistory';
-
+import { View, Text, StyleSheet, Pressable } from "react-native";
+import React, { useState } from "react";
+import { COLOR } from "../../constants/colors";
+import FinancialRecord from "./options/financialRecord";
+import FinancialHistory from "./options/financialHistory";
+import FinancialSavings from "./options/financialSavings"; // 🔹 Tambahkan komponen baru
 
 export default function OptionsCatatan() {
-  const [selected, setSelected] = useState<"record" | "history">("record");
+  // 🔧 Perbaiki tipe agar savings terdaftar
+  const [selected, setSelected] = useState<"record" | "history" | "savings">("record");
 
   return (
     <View style={styles.wrapper}>
@@ -14,22 +15,24 @@ export default function OptionsCatatan() {
       <View style={styles.container}>
         <Pressable
           onPress={() => setSelected("record")}
-          style={[
-            styles.option,
-            selected === "record" && styles.optionActive,
-          ]}
+          style={[styles.option, selected === "record" && styles.optionActive]}
         >
-          <Text style={styles.text}>Financial Record</Text>
+          <Text style={styles.text}>Notes</Text>
         </Pressable>
 
         <Pressable
           onPress={() => setSelected("history")}
-          style={[
-            styles.option,
-            selected === "history" && styles.optionActive,
-          ]}
+          style={[styles.option, selected === "history" && styles.optionActive]}
         >
-          <Text style={styles.text}>Financial History</Text>
+          <Text style={styles.text}>History</Text>
+        </Pressable>
+
+        {/* 🏦 Tombol Savings */}
+        <Pressable
+          onPress={() => setSelected("savings")}
+          style={[styles.option, selected === "savings" && styles.optionActive]}
+        >
+          <Text style={styles.text}>Savings</Text>
         </Pressable>
       </View>
 
@@ -37,8 +40,10 @@ export default function OptionsCatatan() {
       <View style={styles.content}>
         {selected === "record" ? (
           <FinancialRecord />
-        ) : (
+        ) : selected === "history" ? (
           <FinancialHistory />
+        ) : (
+          <FinancialSavings />
         )}
       </View>
     </View>
@@ -48,20 +53,24 @@ export default function OptionsCatatan() {
 const styles = StyleSheet.create({
   wrapper: {
     width: "100%",
+    // height: "150%",
     alignItems: "center",
   },
   container: {
     width: "95%",
     marginTop: 10,
-    height: 50,
     flexDirection: "row",
     justifyContent: "space-between",
   },
   option: {
-    width: "49%",
+   // flex: 1,
+  // paddingHorizontal: 25,
+    width: "32%",
+    marginHorizontal: 3,
     backgroundColor: COLOR.secondary,
     borderRadius: 15,
     justifyContent: "center",
+    height: 50,
   },
   optionActive: {
     backgroundColor: COLOR.fourtiary,
@@ -74,9 +83,7 @@ const styles = StyleSheet.create({
   },
   content: {
     marginTop: 10,
-    // borderRadius: 15,
     width: "100%",
-    // height: 400,
     alignItems: "center",
   },
 });

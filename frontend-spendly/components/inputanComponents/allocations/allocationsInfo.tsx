@@ -1,34 +1,47 @@
 import { useUsers } from "@/contexts/usersContext";
 import React, { useEffect, useState } from "react";
-import { Dimensions, StyleSheet, Text, View } from "react-native";
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+} from "react-native";
 import { COLOR } from "../../../constants/colors";
 
 const screenWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
+  container: {
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden",
+  },
   text: {
     color: COLOR.white,
   },
   wrapper: {
- //   backgroundColor: COLOR.secondary,
     width: "100%",
-   // minHeight: 200,
     borderRadius: 25,
     paddingTop: 30,
-    paddingVertical: 20,
+    paddingVertical: 10,
     alignItems: "center",
     justifyContent: "center",
   },
+  scrollContainer: {
+    width: "100%",
+  },
   gridContainer: {
     flexDirection: "row",
-   // flexWrap: "wrap",
     justifyContent: "center",
+    paddingHorizontal: 10,
   },
   allocationItem: {
     backgroundColor: COLOR.black,
-    width: screenWidth / 3.5, // 👈 sekitar 3 item per baris
+    width: screenWidth / 3.5, // sekitar 3 item per baris
     height: 60,
-    margin: 6,
+    margin: 5,
     borderRadius: 12,
     justifyContent: "center",
     alignItems: "center",
@@ -55,22 +68,28 @@ export default function AllocationsInfo() {
   }, [loading, user]);
 
   return (
-    <View>
+    <View style={styles.container}>
       {loading ? (
         <Text style={styles.text}>Loading...</Text>
       ) : allocations.length > 0 ? (
         <View style={styles.wrapper}>
-          <View style={styles.gridContainer}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.gridContainer}
+          >
             {allocations.map((item, index) => (
               <View key={index} style={styles.allocationItem}>
                 <Text style={styles.allocationName}>{item.name}</Text>
                 <Text style={styles.allocationPercent}>{item.percent}%</Text>
               </View>
             ))}
-          </View>
+          </ScrollView>
         </View>
       ) : (
-        <Text style={styles.text}>No allocations found</Text>
+        <View style={styles.wrapper}>
+          <Text style={styles.text}>No allocations found</Text>
+        </View>
       )}
     </View>
   );

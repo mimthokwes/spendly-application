@@ -56,9 +56,13 @@ export default function FinancialRadar() {
       if (prev === 0) return curr === 0 ? 0 : 100; // kalau prev 0 tapi curr >0 => treat as 100%
       return ((curr - prev) / Math.abs(prev)) * 100;
     };
+    const calcGrowthSpend = (curr: number, prev: number) => {
+      if (prev === 0) return curr === 0 ? 0 : 100; // kalau prev 0 tapi curr >0 => treat as 100% 
+      return ((prev - curr) / Math.abs(prev)) * 100;
+    }
 
     const incomeGrowth = calcGrowth(currIncome, prevIncome); // bisa negatif
-    const spendingGrowth = calcGrowth(currSpending, prevSpending); // bisa negatif
+    const spendingGrowth = calcGrowthSpend(currSpending, prevSpending); // bisa negatif
 
     // Budget Discipline = 100 - (spending / income * 100)
     const budgetDiscipline =
@@ -92,7 +96,7 @@ export default function FinancialRadar() {
 
     const newValues = [
       normalize(incomeGrowth >= 0 ? incomeGrowth : Math.abs(incomeGrowth)), // gunakan absolute growth untuk radar visual
-      normalize(Math.abs(spendingGrowth)),
+      normalize(spendingGrowth),
       normalize(healthScore),
       normalize(budgetDiscipline),
       normalize(cashFlowStability),
@@ -111,16 +115,16 @@ export default function FinancialRadar() {
       data={values}            // <-- number[]
       maxValue={100}
       chartSize={200}
-      strokeWidth={1}
-      fontSize={11}
+    //  strokeWidth={1}
+      //fontSize={11}
       // try `labels` first:
       labels={labels}
-      labelsConfig={{ fontSize: 11, fontWeight: "600" }}
+      //labelsConfig={{ fontSize: 11, fontWeight: "600" }}
       // if your version expects a different prop name, rename to the one required by your version:
       // radarLabels={labels}
-      backgroundColor={COLOR.grey}
-      areaColor="rgba(255,255,255,0.18)"
-      showValuesAsLabels={true} // optional, depending on library version
+     // backgroundColor={COLOR.grey}
+      //areaColor="rgba(255,255,255,0.18)"
+      //showValuesAsLabels={true} // optional, depending on library version
       />
 
       <View style={styles.legendContainer}>

@@ -15,6 +15,9 @@ const styles = StyleSheet.create({
   text: {
     color: COLOR.white,
   },
+  ScrollView: {
+    flexGrow: 1,
+  },
   contentContainer: {
     alignItems: "center", 
     paddingBottom: 20,
@@ -24,10 +27,13 @@ const styles = StyleSheet.create({
 export default function CatatanSceen() {
   return (
     <View style={styles.container}>
-     
+      {/* <ScrollView
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false} 
+      > */}
         <Allocations />
         <OptionsCatatan />
-        
+        {/* </ScrollView> */}
     </View>
   );
 }
