@@ -4,7 +4,12 @@ import { COLOR } from "../../constants/colors";
 import { useTransactions } from "@/contexts/transactionsContext";
 import { PieChart } from "react-native-gifted-charts";
 
-export default function TestChart() {
+type Props = {
+  month: number; // 1–12
+  year: number;
+};
+
+export default function TestChart({ month, year }: Props) {
   const { transactions, loading } = useTransactions();
 
   const [chartData, setChartData] = useState<any[]>([]);
@@ -35,13 +40,20 @@ export default function TestChart() {
 
   useEffect(() => {
     if (!loading && transactions.length > 0) {
-      // Ambil spending dan income
-      const spendings = transactions.filter((t: any) => t.type === "spending");
-      const incomes = transactions.filter((t: any) => t.type === "income");
+      // Filter transaksi sesuai bulan & tahun yang dipilih user
+      const filteredTx = transactions.filter((t: any) => {
+        const d = new Date(t.date);
+        return d.getMonth() + 1 === month + 1 && d.getFullYear() === year;
+      });
+
+      // Pisahkan spending dan income
+      const spendings = filteredTx.filter((t: any) => t.type === "spending");
+      const incomes = filteredTx.filter((t: any) => t.type === "income");
 
       // Hitung total spending & income
-      const totalSp = spendings.reduce((a: any, b: any) => a + b.nominal, 0);
-      const totalIn = incomes.reduce((a: any, b: any) => a + b.nominal, 0);
+      const totalSp = spendings.reduce((a: number, b: any) => a + b.nominal, 0);
+      const totalIn = incomes.reduce((a: number, b: any) => a + b.nominal, 0);
+
       setTotalSpending(totalSp);
       setTotalIncome(totalIn);
 
@@ -61,11 +73,12 @@ export default function TestChart() {
 
       setChartData(formattedData);
     } else {
+      // Jika belum ada data
       setChartData([]);
       setTotalSpending(0);
       setTotalIncome(0);
     }
-  }, [transactions, loading]);
+  }, [transactions, loading, month, year]);
 
   // Hitung Spending Ratio (%)
   const spendingRatio =
@@ -74,58 +87,58 @@ export default function TestChart() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Percentage of Expenses</Text>
-      <View>
-        {chartData.length > 0 ? (
-          <View style={styles.content}>
-            {/* Chart di kiri */}
-            <View style={styles.chartWrapper}>
-              <PieChart
-                data={chartData}
-                radius={80}
-                donut
-                innerRadius={60}
-                innerCircleColor={COLOR.secondary}
-                showText
-                textColor={COLOR.white}
-                focusOnPress
-              />
-              {/* Teks di tengah chart */}
-              <View style={styles.centerTextContainer}>
-                <Text style={styles.centerValue}>{spendingRatio}%</Text>
-                <Text style={styles.centerLabel}>Spending</Text>
-              </View>
-            </View>
-
-            {/* List kategori di kanan */}
-            <View style={styles.legendContainer}>
-              {chartData.map((item, index) => {
-                const percentage =
-                  totalSpending > 0
-                    ? ((item.value / totalSpending) * 100).toFixed(1)
-                    : "0.0";
-                return (
-                  <View key={index} style={styles.legendItem}>
-                    <View
-                      style={[
-                        styles.colorDot,
-                        { backgroundColor: item.color || COLOR.grey },
-                      ]}
-                    />
-                    <Text style={styles.legendText}>
-                      {item.label.length > 18
-                        ? item.label.slice(0, 18) + "..."
-                        : item.label}
-                    </Text>
-                    <Text style={styles.percentageText}>{percentage}%</Text>
-                  </View>
-                );
-              })}
+      {chartData.length > 0 ? (
+        <View style={styles.content}>
+          {/* Chart */}
+          <View style={styles.chartWrapper}>
+            <PieChart
+              data={chartData}
+              radius={80}
+              donut
+              innerRadius={60}
+              innerCircleColor={COLOR.secondary}
+              showText
+              textColor={COLOR.white}
+              focusOnPress
+            />
+            {/* Text di tengah */}
+            <View style={styles.centerTextContainer}>
+              <Text style={styles.centerValue}>{spendingRatio}%</Text>
+              <Text style={styles.centerLabel}>Spending</Text>
             </View>
           </View>
-        ) : (
-          <Text style={{ color: COLOR.grey }}>No data available</Text>
-        )}
-      </View>
+
+          {/* List kategori */}
+          <View style={styles.legendContainer}>
+            {chartData.map((item, index) => {
+              const percentage =
+                totalSpending > 0
+                  ? ((item.value / totalSpending) * 100).toFixed(1)
+                  : "0.0";
+              return (
+                <View key={index} style={styles.legendItem}>
+                  <View
+                    style={[
+                      styles.colorDot,
+                      { backgroundColor: item.color || COLOR.grey },
+                    ]}
+                  />
+                  <Text style={styles.legendText}>
+                    {item.label.length > 18
+                      ? item.label.slice(0, 18) + "..."
+                      : item.label}
+                  </Text>
+                  <Text style={styles.percentageText}>{percentage}%</Text>
+                </View>
+              );
+            })}
+          </View>
+        </View>
+      ) : (
+        <Text style={{ color: COLOR.grey, textAlign: "center" }}>
+          No data found for {month}/{year}
+        </Text>
+      )}
     </View>
   );
 }

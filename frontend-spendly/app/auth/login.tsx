@@ -95,7 +95,6 @@ export default function LoginScreen() {
   return (
     <View style={styles.container}>
       <Profile
-        imageSource={require("../../assets/images/icon-baru.png")}
         username={username}
       />
       <InputNumber value={password} />

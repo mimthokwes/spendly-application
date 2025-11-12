@@ -138,7 +138,7 @@ export default function FinancialSavings() {
       <View style={styles.wrap}>
         {/* 💰 Info Total */}
         <Text style={styles.totalText}>
-          Total Savings:{" "}
+          Savings Amount:{" "}
           <Text style={styles.totalAmount}>
             Rp {saving?.total?.toLocaleString("id-ID") ?? 0}
           </Text>

@@ -5,6 +5,7 @@ import TotalAssets from "../../components/dashboardComponents/totalAssets";
 import TransactionsInfo from "@/components/dashboardComponents/transactionsInfo";
 import InsightUser from "@/components/dashboardComponents/insightUser";
 import StatusKeuangan from "@/components/dashboardComponents/cashFlow";
+import SavingSaldo from "@/components/dashboardComponents/savingsaldo";
 
 const styles = StyleSheet.create({
   container: {
@@ -33,6 +34,7 @@ export default function DashboardScreen() {
         <TotalAssets onChangePercentage={setPercentageChange} visible={visible} setVisible={setVisible}/>
         <TransactionsInfo visible={visible}/>
         <InsightUser />
+        <SavingSaldo visible={visible}/>
         <StatusKeuangan />
       </ScrollView>
     </View>

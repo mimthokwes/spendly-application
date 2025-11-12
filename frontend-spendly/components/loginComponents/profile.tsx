@@ -1,16 +1,16 @@
 import React from 'react';
 import { View, Image, Text, StyleSheet, ImageSourcePropType } from 'react-native';
 import {COLOR} from '../../constants/colors'
+import { MaterialIcons } from '@expo/vector-icons';
 
 interface ProfileProps {
-  imageSource: ImageSourcePropType; // ✅ tipe bawaan React Native untuk gambar
   username: string;
 }
 
-export default function Profile({ imageSource, username }: ProfileProps) {
+export default function Profile({ username }: ProfileProps) {
   return (
     <View style={styles.container}>
-      <Image source={imageSource} style={styles.image} />
+      <MaterialIcons name={'flutter-dash'} size={120} color={COLOR.white} style={styles.image}/>
       <Text style={styles.text}>Walcome {username}</Text>
     </View>
   );
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   image: {
     width: 120,
     height: 120,
-    borderRadius: 60,
+   // borderRadius: 60,
   },
   text: {
     marginTop: 12,

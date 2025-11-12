@@ -2,10 +2,10 @@ import { useUsers } from "@/contexts/usersContext";
 import React, { useEffect, useState } from "react";
 import {
   Dimensions,
+  ScrollView,
   StyleSheet,
   Text,
   View,
-  ScrollView,
 } from "react-native";
 import { COLOR } from "../../../constants/colors";
 
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     width: "100%",
     borderRadius: 25,
     paddingTop: 30,
-    paddingVertical: 10,
+    paddingVertical: 15,
     alignItems: "center",
     justifyContent: "center",
   },

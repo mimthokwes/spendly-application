@@ -4,7 +4,12 @@ import { useTransactions } from "@/contexts/transactionsContext";
 import { COLOR } from "../../constants/colors";
 import { BarChart } from "react-native-gifted-charts";
 
-export default function MomBarChartIncome() {
+type Props = {
+  month: number; // 0–11
+  year: number;
+};
+
+export default function MomBarChartIncome({ month , year }: Props) {
   const { transactions, loading } = useTransactions();
   const [chartData, setChartData] = useState<any[]>([]);
   const screenWidth = Dimensions.get("window").width;
@@ -12,32 +17,35 @@ export default function MomBarChartIncome() {
   useEffect(() => {
     if (!loading && transactions.length > 0) {
       const monthlyData: Record<string, number> = {};
+
+      // Kelompokkan nominal berdasarkan bulan-tahun
       transactions.forEach((t: any) => {
         const date = new Date(t.date);
-        const year = date.getFullYear();
-        const month = date.getMonth();
-        const key = `${year}-${month}`;
+        const y = date.getFullYear();
+        const m = date.getMonth();
+        const key = `${y}-${m}`;
         if (t.type === "income") {
           monthlyData[key] = (monthlyData[key] || 0) + (t.nominal || 0);
         }
       });
 
-      const sortedKeys = Object.keys(monthlyData).sort((a, b) => {
-        const [ay, am] = a.split("-").map(Number);
-        const [by, bm] = b.split("-").map(Number);
-        return ay === by ? am - bm : ay - by;
-      });
+      // Buat daftar 5 bulan terakhir termasuk bulan yang dipilih
+      const targetDate = new Date(year, month);
+      const lastFiveKeys: string[] = [];
+      for (let i = 4; i >= 0; i--) {
+        const d = new Date(targetDate.getFullYear(), targetDate.getMonth() - i);
+        const k = `${d.getFullYear()}-${d.getMonth()}`;
+        lastFiveKeys.push(k);
+      }
 
-      // Ambil 5 bulan terakhir
-      const lastFiveKeys = sortedKeys.slice(-5);
-
+      // Format ke bentuk chart
       const formattedData = lastFiveKeys.map((key) => {
-        const [year, monthIndex] = key.split("-").map(Number);
-        const monthName = new Date(year, monthIndex).toLocaleString("default", {
+        const [y, m] = key.split("-").map(Number);
+        const monthName = new Date(y, m).toLocaleString("default", {
           month: "short",
         });
         return {
-          value: monthlyData[key],
+          value: monthlyData[key] || 0,
           label: monthName,
           frontColor: COLOR.green,
         };
@@ -45,9 +53,9 @@ export default function MomBarChartIncome() {
 
       setChartData(formattedData);
     }
-  }, [transactions, loading]);
+  }, [transactions, loading, month, year]);
 
-  // Hitung lebar chart agar tetap center & stabil
+  // Hitung ukuran chart agar tetap center
   const totalBars = chartData.length;
   const barWidth = 18;
   const spacing = 35;
@@ -55,7 +63,14 @@ export default function MomBarChartIncome() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Income Grow Rate (Last 5 Months)</Text>
+      <Text style={styles.text}>
+        Income Growth (Last 5 Months up to{" "}
+        {new Date(year, month).toLocaleString("default", {
+          month: "long",
+          year: "numeric",
+        })}
+        )
+      </Text>
 
       {chartData.length > 0 ? (
         <View
@@ -80,9 +95,7 @@ export default function MomBarChartIncome() {
             yAxisTextStyle={{ color: COLOR.white }}
             barMarginBottom={5}
             isAnimated
-            // showValuesAsTopLabel
-            //topLabelTextStyle={{ color: COLOR.white, fontSize: 10 }}
-            initialSpacing={(screenWidth * 0.9 - totalChartWidth) / 2} // <--- ini yang bikin chart tetap center
+            initialSpacing={(screenWidth * 0.9 - totalChartWidth) / 2}
           />
         </View>
       ) : (
