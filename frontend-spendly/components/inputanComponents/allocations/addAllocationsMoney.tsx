@@ -1,9 +1,13 @@
-// addAllocationsMoney.tsx
 import React from "react";
 import { StyleSheet, TextInput, View } from "react-native";
 import { COLOR } from "../../../constants/colors";
 
-export default function AllocationsMoney({ name, percent, onChangeName, onChangePercent }: any) {
+export default function AllocationsMoney({
+  name,
+  percent,
+  onChangeName,
+  onChangePercent,
+}: any) {
   return (
     <View style={styles.container}>
       <TextInput

@@ -1,50 +1,48 @@
 import { useUsers } from "@/contexts/usersContext";
 import React, { useEffect, useState } from "react";
 import {
-  Dimensions,
   ScrollView,
   StyleSheet,
   Text,
   View,
+  TouchableOpacity,
 } from "react-native";
 import { COLOR } from "../../../constants/colors";
-
-const screenWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
   container: {
     width: "100%",
+    height: 130, // tinggi tetap
     alignItems: "center",
     justifyContent: "center",
     overflow: "hidden",
+    paddingTop: 20,
   },
   text: {
     color: COLOR.white,
   },
   wrapper: {
     width: "100%",
+    height: "100%", // biar fix-height
+    paddingTop: 10,
+    paddingBottom: 5,
     borderRadius: 25,
-    paddingTop: 30,
-    paddingVertical: 15,
-    alignItems: "center",
     justifyContent: "center",
   },
-  scrollContainer: {
-    width: "100%",
-  },
-  gridContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
+  scrollContent: {
     paddingHorizontal: 10,
   },
   allocationItem: {
-    backgroundColor: COLOR.black,
-    width: screenWidth / 3.5, // sekitar 3 item per baris
-    height: 60,
-    margin: 5,
-    borderRadius: 12,
-    justifyContent: "center",
-    alignItems: "center",
+    paddingVertical: 4,
+    paddingHorizontal: 10,
+    marginBottom: 6,
+    width: "100%",
+    backgroundColor: COLOR.fourtiary,
+    borderRadius: 15,
+  },
+  namePercentRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
   allocationName: {
     color: COLOR.white,
@@ -52,17 +50,17 @@ const styles = StyleSheet.create({
   },
   allocationPercent: {
     color: COLOR.white,
-    fontWeight: "600",
     fontSize: 14,
+    fontWeight: "600",
   },
 });
 
-export default function AllocationsInfo() {
+export default function AllocationsInfo({ onEdit }: any) {
   const { loading, user } = useUsers();
   const [allocations, setAllocations] = useState<any[]>([]);
 
   useEffect(() => {
-    if (!loading && user && user.allocation) {
+    if (!loading && user?.allocation) {
       setAllocations(user.allocation);
     }
   }, [loading, user]);
@@ -74,15 +72,20 @@ export default function AllocationsInfo() {
       ) : allocations.length > 0 ? (
         <View style={styles.wrapper}>
           <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.gridContainer}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={styles.scrollContent}
           >
             {allocations.map((item, index) => (
-              <View key={index} style={styles.allocationItem}>
-                <Text style={styles.allocationName}>{item.name}</Text>
-                <Text style={styles.allocationPercent}>{item.percent}%</Text>
-              </View>
+              <TouchableOpacity
+                key={index}
+                style={styles.allocationItem}
+                onPress={() => onEdit(index, item)}
+              >
+                <View style={styles.namePercentRow}>
+                  <Text style={styles.allocationName}>{item.name}</Text>
+                  <Text style={styles.allocationPercent}>{item.percent}%</Text>
+                </View>
+              </TouchableOpacity>
             ))}
           </ScrollView>
         </View>

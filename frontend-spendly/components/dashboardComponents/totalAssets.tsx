@@ -91,7 +91,7 @@ export default function TotalAssets({
               Rp {totalAssets.toLocaleString("id-ID")}
             </Text>
             ) : (
-              <Text style={styles.value}>Rp *****</Text>
+              <Text style={styles.value}>Rp ***** </Text>
             )}
             {percentageChange !== null && (
               <Text
@@ -99,7 +99,7 @@ export default function TotalAssets({
                   styles.info,
                   { color: percentageChange >= 0 ? COLOR.green : COLOR.red },
                 ]}
-              > Asset Grow Rate {}
+              > Asset Grow Rate {""}
                 {percentageChange >= 0 ? "Naik" : "Turun"}{" "}
                 {Math.abs(percentageChange).toFixed(1)}%
               </Text>

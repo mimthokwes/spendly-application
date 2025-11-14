@@ -1,4 +1,3 @@
-// allocations.tsx
 import AllocationsInfo from "./allocations/allocationsInfo";
 import AllocationsMoney from "./allocations/addAllocationsMoney";
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
@@ -11,45 +10,118 @@ export default function Allocations() {
   const [add, setAdd] = useState(false);
   const [name, setName] = useState("");
   const [percent, setPercent] = useState("");
+  const [editIndex, setEditIndex] = useState<number | null>(null);
+
   const { user, updateUser } = useUsers();
 
-  const handleClick = () => setAdd(!add);
+  const handleClick = () => {
+    setAdd(!add);
 
-  const handleAddAllocation = async () => {
-    if (!name.trim() || !percent.trim()) {
-      Alert.alert("Error", "Please fill in all fields");
+    // reset edit mode when closing
+    if (add) {
+      setEditIndex(null);
+      setName("");
+      setPercent("");
+    }
+  };
+
+  const handleEdit = (index: number, item: any) => {
+    setName(item.name);
+    setPercent(String(item.percent));
+    setEditIndex(index);
+    setAdd(true);
+  };
+
+ const handleSave = async () => {
+  const nameTrim = name.trim();
+  const percentTrim = percent.trim();
+
+  const allocations = user?.allocation || [];
+  let updatedAllocations;
+
+  // =======================
+  //     DELETE MODE
+  // =======================
+  if (editIndex !== null && nameTrim === "" && percentTrim === "") {
+    updatedAllocations = allocations.filter((_, i) => i !== editIndex);
+
+    try {
+      await updateUser({ allocation: updatedAllocations });
+      Alert.alert("Deleted", "Allocation has been removed");
+
+      setName("");
+      setPercent("");
+      setAdd(false);
+      setEditIndex(null);
+      return;
+    } catch (err: any) {
+      Alert.alert("Error", err.message);
       return;
     }
+  }
 
-    const percentNum = parseFloat(percent);
-    if (isNaN(percentNum) || percentNum <= 0) {
-      Alert.alert("Error", "Please enter a valid percentage");
+  // =======================
+  //  VALIDATION NORMAL MODE
+  // =======================
+  if (!nameTrim || !percentTrim) {
+    Alert.alert("Error", "Please fill in all fields");
+    return;
+  }
+
+  const percentNum = parseFloat(percentTrim);
+  if (percentNum <= 0) {
+    Alert.alert("Error", "Please enter a valid percentage");
+    return;
+  }
+
+  // =======================
+  //        EDIT MODE
+  // =======================
+  if (editIndex !== null) {
+    updatedAllocations = [...allocations];
+    updatedAllocations[editIndex] = { name: nameTrim, percent: percentNum };
+
+    const total = updatedAllocations.reduce((acc, a) => acc + a.percent, 0);
+
+    if (total > 100) {
+      Alert.alert("Error", "Total percentage cannot exceed 100%");
       return;
     }
+  }
 
-    const totalPercent = (user?.allocation || []).reduce(
-      (acc, a) => acc + a.percent,
-      0
-    );
+  // =======================
+  //        ADD MODE
+  // =======================
+  else {
+    const total = allocations.reduce((acc, a) => acc + a.percent, 0);
 
-    if (totalPercent + percentNum > 100) {
+    if (total + percentNum > 100) {
       Alert.alert("Error", "Total percentage cannot exceed 100%");
       return;
     }
 
-    const newAllocation = { name, percent: percentNum };
-    const updatedAllocations = [...(user?.allocation || []), newAllocation];
+    updatedAllocations = [...allocations, { name: nameTrim, percent: percentNum }];
+  }
 
-    try {
-      await updateUser({ allocation: updatedAllocations });
-      Alert.alert("Success", "Allocation added successfully");
-      setName("");
-      setPercent("");
-      setAdd(false); // kembali ke mode info
-    } catch (err: any) {
-      Alert.alert("Error", err.message);
-    }
-  };
+  // =======================
+  //       SAVE CHANGES
+  // =======================
+  try {
+    await updateUser({ allocation: updatedAllocations });
+
+    Alert.alert(
+      "Success",
+      editIndex !== null ? "Allocation updated" : "Allocation added"
+    );
+
+    setName("");
+    setPercent("");
+    setAdd(false);
+    setEditIndex(null);
+  } catch (err: any) {
+    Alert.alert("Error", err.message);
+  }
+};
 
   return (
     <View style={styles.container}>
@@ -62,16 +134,14 @@ export default function Allocations() {
             onChangePercent={setPercent}
           />
 
-          {/* 🔥 Tombol ini sekarang benar-benar menjalankan add */}
-          <TouchableOpacity
-            style={styles.addButton}
-            onPress={handleAddAllocation}
-          >
-            <Text style={styles.addText}>Add Allocation</Text>
+          <TouchableOpacity style={styles.addButton} onPress={handleSave}>
+            <Text style={styles.addText}>
+              {editIndex !== null ? "Update Allocation" : "Add Allocation"}
+            </Text>
           </TouchableOpacity>
         </>
       ) : (
-        <AllocationsInfo />
+        <AllocationsInfo onEdit={handleEdit} />
       )}
 
       <MaterialIcons
@@ -98,7 +168,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     alignSelf: "center",
-   // marginTop: 10,
   },
   addText: {
     color: "#fff",
@@ -106,8 +175,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     position: "absolute",
-    //top: 15,
-    bottom: 4,
+    bottom: 0,
     right: 25,
   },
 });

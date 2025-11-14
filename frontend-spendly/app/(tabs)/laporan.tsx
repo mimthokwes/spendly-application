@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
 
 export default function LaporanScreen() {
   const date = new Date();
-  const [month, setMonth] = useState(date.getMonth() -1);
+  const [month, setMonth] = useState(date.getMonth());
   const [year, setYear] = useState(date.getFullYear());
 
   return (
